@@ -13,6 +13,7 @@ pub const EMPTY_CELL: Cell = 0;
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub struct Board {
     cells: [[Cell; N]; N],
+    score: = 0,
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Direction {
@@ -87,6 +88,10 @@ impl Board {
             // and we put the result in the new level boards
                         if let Some(mut board) = board_iterator {
                             new_level_board.push(board.play(post_direction));
+                            let score = board.evaluate();
+                            if score > max.1 {
+                            max = (direction, score);
+                    }
                         }
                     }
                 }
@@ -95,20 +100,21 @@ impl Board {
             }
 
             // check the max score of the last layer and if it is the max of all time update max(Direction, u32)
-            for board_iterator in last_layer.get(&direction).unwrap(){
+            /*for board_iterator in last_layer.get(&direction).unwrap(){
                 if let Some(board) = board_iterator{
                     let score = board.evaluate();
                     if score > max.1 {
                         max = (direction, score);
                     }
                 }
-            }
+            }*/
         }
         // return the direction found
         if max.1 == self.evaluate(){
             panic!("You lost ! ")
         }else{
             max.0
+            //todo!("check how to not panic if the game ends within projection_nb moves => maybe a move is still available we should let the player continue and not stop brutally the game")
         }
     
     }
@@ -211,7 +217,7 @@ impl Board {
             for j in 0..N{
                 match self.value_at(i, j){
                     0 => sum +=1,
-                    n => sum += n*n,
+                    n => sum += n*n*(i+j)as u32,
                 }
             }
         }

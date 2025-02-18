@@ -7,11 +7,12 @@ use rand::{rng, Rng};
 mod board;
 fn main() {
     let mut moves_played = 0;
-    let nb = 8;
+    let nb = 11;
     let mut initial_board = Board::new_empty();
     let mut board = initial_board.generate_random().unwrap().generate_random().unwrap();
     loop{
         println!("initial_board: \n{}", board);
+        println!("\n!!Thinking!!\n");
         let bsmove = board.best_move(nb);
         println!("best move is : {}",bsmove );
         println!("playing best move : ");
